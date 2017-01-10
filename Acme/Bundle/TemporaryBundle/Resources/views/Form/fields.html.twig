@@ -1,0 +1,38 @@
+{% block acme_bundle_temporary_order_item_collection_widget %}
+    {% set prototypeHtml = _self.prototype(form) %}
+    {% set attr = attr|merge({'class': (attr.class is defined ? attr.class ~ ' ' : '') ~ 'oro-item-collection collection-fields-list' }) %}
+    {% set id = id ~ '_collection' %}
+    <style type="text/css">
+        .order-items-subform .control-group {
+            float: left;
+        }
+    </style>
+    <div class="row-oro">
+        <div {{ block('widget_container_attributes') }} data-prototype="{{ prototypeHtml|escape }}">
+            {% if form.children|length %}
+                {% for child in form.children %}
+                    {{ _self.prototype(child) }}
+                {% endfor %}
+            {% else %}
+                {{ prototypeHtml|replace({'__name__': '0'})|raw }}
+            {% endif %}
+        </div>
+        <a class="btn add-list-item" href="javascript: void(0);"><i class="icon-plus"></i>{{ 'Add'|trans }}</a>
+    </div>
+{% endblock %}
+
+{% macro prototype(widget) %}
+    {% if 'prototype' in widget.vars|keys %}
+        {% set form = widget.vars.prototype %}
+        {% set name = widget.vars.prototype.vars.name %}
+    {% else %}
+        {% set form = widget %}
+        {% set name = widget.vars.full_name %}
+    {% endif %}
+    <div data-content="{{ name }}" data-validation-ignore>
+        <div class="row-oro order-items-subform clearfix">
+            {{ form_widget(form) }}
+            <button class="removeRow btn btn-action btn-link" type="button" data-related="{{ name }}">×</button>
+        </div>
+    </div>
+{% endmacro %}
